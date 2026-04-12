@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Patient Registration — {{ clinic.name }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <style>
+        main { max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+        h1 { color: #2563eb; }
+        .section-title { margin-top: 2rem; color: #334155; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+        #success { display: none; text-align: center; padding: 3rem 1rem; }
+        #success h2 { color: #16a34a; }
+    </style>
+</head>
+<body>
+<main>
+    <div id="form-container">
+        <h1>{{ clinic.name }}</h1>
+        <p>New Patient Registration Form</p>
+
+        <form id="intake-form">
+            <h3 class="section-title">Owner Information</h3>
+            <div class="grid">
+                <label>First Name <input type="text" name="owner_first_name" required></label>
+                <label>Last Name <input type="text" name="owner_last_name" required></label>
+            </div>
+            <label>Phone <input type="tel" name="owner_phone" required></label>
+            <label>Email <input type="email" name="owner_email"></label>
+            <label>Address <input type="text" name="owner_address"></label>
+            <div class="grid">
+                <label>Emergency Contact Name <input type="text" name="emergency_contact_name"></label>
+                <label>Emergency Contact Phone <input type="tel" name="emergency_contact_phone"></label>
+            </div>
+
+            <h3 class="section-title">Pet Information</h3>
+            <div class="grid">
+                <label>Pet Name <input type="text" name="pet_name" required></label>
+                <label>Species
+                    <select name="pet_species" required>
+                        <option value="">Select...</option>
+                        <option value="dog">Dog</option>
+                        <option value="cat">Cat</option>
+                        <option value="bird">Bird</option>
+                        <option value="reptile">Reptile</option>
+                        <option value="small_mammal">Small Mammal</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+            </div>
+            <div class="grid">
+                <label>Breed <input type="text" name="pet_breed"></label>
+                <label>Date of Birth <input type="date" name="pet_dob"></label>
+            </div>
+            <div class="grid">
+                <label>Weight (lbs) <input type="number" name="pet_weight" step="0.1"></label>
+                <label>Sex
+                    <select name="pet_sex">
+                        <option value="">Select...</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="neutered_male">Neutered Male</option>
+                        <option value="spayed_female">Spayed Female</option>
+                    </select>
+                </label>
+            </div>
+            <label>Color/Markings <input type="text" name="pet_color"></label>
+            <label>Microchip Number <input type="text" name="pet_microchip"></label>
+
+            <h3 class="section-title">Medical History</h3>
+            <label>Known Allergies <textarea name="pet_allergies" rows="2"></textarea></label>
+            <label>Current Medications <textarea name="pet_medications" rows="2"></textarea></label>
+            <label>Additional Medical Notes <textarea name="pet_medical_notes" rows="3"></textarea></label>
+
+            <button type="submit" style="margin-top:1rem; width:100%;">Submit Registration</button>
+        </form>
+    </div>
+
+    <div id="success">
+        <h2>Registration Complete!</h2>
+        <p id="success-message"></p>
+    </div>
+</main>
+
+<script>
+document.getElementById('intake-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+    const data = Object.fromEntries(form.entries());
+    if (data.pet_weight) data.pet_weight = parseFloat(data.pet_weight);
+
+    try {
+        const resp = await fetch(`/api/intake/{{ clinic.id }}/submit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        const result = await resp.json();
+        if (result.success) {
+            document.getElementById('form-container').style.display = 'none';
+            document.getElementById('success').style.display = 'block';
+            document.getElementById('success-message').textContent = result.message;
+        } else {
+            alert('Error: ' + (result.error || 'Something went wrong'));
+        }
+    } catch (err) {
+        alert('Network error. Please try again.');
+    }
+});
+</script>
+</body>
+</html>

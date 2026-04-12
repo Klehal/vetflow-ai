@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Appointments{% endblock %}
+{% block content %}
+<h2>Appointments</h2>
+{% if appointments %}
+<table>
+    <thead>
+        <tr><th>Date</th><th>Time</th><th>Pet</th><th>Owner</th><th>Service</th><th>Status</th><th>Source</th></tr>
+    </thead>
+    <tbody>
+    {% for a in appointments %}
+        <tr>
+            <td>{{ a.scheduled_date }}</td>
+            <td>{{ a.scheduled_time }}</td>
+            <td><strong>{{ a.pet_name }}</strong></td>
+            <td>{{ a.owner_name }} {% if a.owner_phone %}<br><small>{{ a.owner_phone }}</small>{% endif %}</td>
+            <td>{{ a.service_type }}</td>
+            <td><span class="badge {% if a.status == 'confirmed' %}badge-green{% elif a.status == 'cancelled' %}badge-red{% else %}badge-yellow{% endif %}">{{ a.status }}</span></td>
+            <td><span class="badge badge-blue">{{ a.source }}</span></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No upcoming appointments.</p>
+{% endif %}
+{% endblock %}

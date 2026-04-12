@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<h2>Welcome, {{ clinic.name }}</h2>
+<p style="color:#64748b">{{ today }} — Here's your daily snapshot</p>
+
+<div class="grid-stats">
+    <div class="stat-card">
+        <h3>{{ appointments_today|length }}</h3>
+        <p>Appointments Today</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ appointments_week|length }}</h3>
+        <p>This Week</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ conversations|length }}</h3>
+        <p>Recent Conversations</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ pending_intakes|length }}</h3>
+        <p>Pending Intakes</p>
+    </div>
+</div>
+
+<h3>Today's Appointments</h3>
+{% if appointments_today %}
+<table>
+    <thead>
+        <tr><th>Time</th><th>Pet</th><th>Owner</th><th>Service</th><th>Status</th><th>Source</th></tr>
+    </thead>
+    <tbody>
+    {% for a in appointments_today %}
+        <tr>
+            <td>{{ a.scheduled_time }}</td>
+            <td><strong>{{ a.pet_name }}</strong> ({{ a.pet_species or '—' }})</td>
+            <td>{{ a.owner_name }}</td>
+            <td>{{ a.service_type }}</td>
+            <td><span class="badge badge-green">{{ a.status }}</span></td>
+            <td><span class="badge badge-blue">{{ a.source }}</span></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p style="color:#94a3b8">No appointments scheduled for today.</p>
+{% endif %}
+
+<h3>Recent Conversations</h3>
+{% if conversations %}
+<table>
+    <thead>
+        <tr><th>Channel</th><th>Caller</th><th>Status</th><th>Started</th></tr>
+    </thead>
+    <tbody>
+    {% for c in conversations[:10] %}
+        <tr>
+            <td><span class="badge badge-blue">{{ c.channel }}</span></td>
+            <td>{{ c.caller_name or c.caller_phone or 'Anonymous' }}</td>
+            <td><span class="badge {% if c.status == 'resolved' %}badge-green{% elif c.status == 'escalated' %}badge-red{% else %}badge-yellow{% endif %}">{{ c.status }}</span></td>
+            <td>{{ c.started_at or '—' }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p style="color:#94a3b8">No conversations yet.</p>
+{% endif %}
+
+<h3>Chat Widget Embed Code</h3>
+<pre><code>&lt;script src="{{ 'http://localhost:8000' }}/widget/{{ clinic.id }}/chat-widget.js" data-clinic-id="{{ clinic.id }}"&gt;&lt;/script&gt;</code></pre>
+{% endblock %}

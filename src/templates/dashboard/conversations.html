@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Conversations{% endblock %}
+{% block content %}
+<h2>Conversations</h2>
+{% for item in conversations %}
+<details style="margin-bottom:1rem; background:white; border-radius:8px; padding:1rem; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+    <summary style="cursor:pointer; font-weight:600;">
+        <span class="badge badge-blue">{{ item.conversation.channel }}</span>
+        {{ item.conversation.caller_name or item.conversation.caller_phone or 'Anonymous' }}
+        — <span class="badge {% if item.conversation.status == 'resolved' %}badge-green{% elif item.conversation.status == 'escalated' %}badge-red{% else %}badge-yellow{% endif %}">{{ item.conversation.status }}</span>
+        <small style="color:#94a3b8; margin-left:1rem;">{{ item.conversation.started_at }}</small>
+    </summary>
+    <div style="margin-top:1rem; max-height:300px; overflow-y:auto;">
+    {% for msg in item.messages %}
+        <div style="margin:0.5rem 0; padding:0.5rem 0.75rem; border-radius:8px; {% if msg.role == 'user' %}background:#eff6ff;{% else %}background:#f0fdf4;{% endif %}">
+            <strong style="font-size:0.8rem; color:{% if msg.role == 'user' %}#2563eb{% else %}#16a34a{% endif %};">{{ msg.role|upper }}</strong>
+            <p style="margin:0.25rem 0 0; font-size:0.9rem;">{{ msg.content }}</p>
+        </div>
+    {% endfor %}
+    </div>
+</details>
+{% else %}
+<p>No conversations yet.</p>
+{% endfor %}
+{% endblock %}

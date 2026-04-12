@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Intake Forms{% endblock %}
+{% block content %}
+<h2>Intake Submissions</h2>
+{% if submissions %}
+<table>
+    <thead>
+        <tr><th>Submitted</th><th>Status</th><th>Owner</th><th>Pet</th><th>Details</th></tr>
+    </thead>
+    <tbody>
+    {% for s in submissions %}
+        <tr>
+            <td>{{ s.submitted_at }}</td>
+            <td><span class="badge {% if s.status == 'pending' %}badge-yellow{% elif s.status == 'reviewed' %}badge-green{% else %}badge-blue{% endif %}">{{ s.status }}</span></td>
+            <td>{{ s.form_data.get('owner_first_name', '') }} {{ s.form_data.get('owner_last_name', '') }}</td>
+            <td>{{ s.form_data.get('pet_name', '') }} ({{ s.form_data.get('pet_species', '') }})</td>
+            <td>
+                <details>
+                    <summary>View</summary>
+                    <pre style="font-size:0.8rem;">{{ s.form_data | tojson(indent=2) if s.form_data is mapping else s.form_data }}</pre>
+                </details>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No intake submissions yet.</p>
+{% endif %}
+
+<h3>Intake Form Link</h3>
+<p>Share this link with pet owners: <code>http://localhost:8000/intake/{{ clinic.id }}</code></p>
+{% endblock %}

@@ -1,0 +1,62 @@
+app:
+  name: "VetFlow AI"
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+
+database:
+  path: "data/vetflow.db"
+
+ai:
+  model: "gpt-4o-mini"
+  temperature: 0.3
+  max_tokens: 500
+  max_history_messages: 20
+
+phone:
+  provider: "bland"
+  cost_per_minute: 0.12
+  max_call_duration_minutes: 10
+  transfer_on_emergency: true
+
+sms:
+  provider: "twilio"
+  cost_per_message: 0.0079
+  max_messages_per_conversation: 20
+
+email:
+  provider: "sendgrid"
+  from_email: "hello@vetflow.ai"
+  from_name: "VetFlow AI"
+
+reminders:
+  check_interval_minutes: 15
+  appointment_48h: true
+  appointment_24h: true
+  vaccination_due_days_before: 7
+
+widget:
+  default_greeting: "Hi! How can we help you and your pet today?"
+  default_color: "#2563eb"
+  typing_delay_ms: 800
+
+logging:
+  level: "INFO"
+  file: "logs/vetflow.log"
+
+pricing:
+  plans:
+    basic:
+      monthly: 499
+      features: ["chat_widget", "sms", "reminders", "intake_forms"]
+      included_sms: 500
+    standard:
+      monthly: 599
+      features: ["chat_widget", "sms", "phone", "reminders", "intake_forms"]
+      included_sms: 1000
+      included_phone_minutes: 200
+    premium:
+      monthly: 699
+      features: ["chat_widget", "sms", "phone", "reminders", "intake_forms", "vaccination_tracking"]
+      included_sms: 2000
+      included_phone_minutes: 500
