@@ -52,6 +52,21 @@ async def chat_websocket(websocket: WebSocket, clinic_id: str):
 
     # Tool handler for AI function calls
     async def handle_tool(fn_name: str, fn_args: dict) -> dict:
+        try:
+            from dateutil import parser as dateparser
+            if "date" in fn_args:
+                try:
+                    fn_args["date"] = dateparser.parse(fn_args["date"]).strftime("%Y-%m-%d")
+                except Exception:
+                    pass
+            if "time" in fn_args:
+                try:
+                    fn_args["time"] = dateparser.parse(fn_args["time"]).strftime("%H:%M")
+                except Exception:
+                    pass
+        except ImportError:
+            pass
+
         if fn_name == "check_availability":
             slots = await appt_service.get_available_slots(
                 clinic, fn_args["date"], fn_args.get("service_type")
@@ -159,17 +174,34 @@ async def chat_http_fallback(clinic_id: str, request: Request):
     history = await conv_repo.get_recent_messages(conv_id, limit=20)
 
     async def handle_tool(fn_name, fn_args):
-        if fn_name == "check_availability":
-            slots = await appt_service.get_available_slots(clinic, fn_args["date"], fn_args.get("service_type"))
-            return {"available_slots": [{"time": s.time} for s in slots if s.available][:8]}
-        elif fn_name == "book_appointment":
-            return await appt_service.book_appointment(
-                clinic=clinic, owner_name=fn_args.get("owner_name", ""), pet_name=fn_args.get("pet_name", ""),
-                service_type=fn_args.get("service_type", "general"), target_date=fn_args["date"],
-                target_time=fn_args["time"], owner_phone=fn_args.get("owner_phone"),
-                pet_species=fn_args.get("pet_species"), source="chat",
-            )
-        return {"error": f"Unknown tool: {fn_name}"}
+        try:
+            # Normalize date format
+            from dateutil import parser as dateparser
+            if "date" in fn_args:
+                try:
+                    fn_args["date"] = dateparser.parse(fn_args["date"]).strftime("%Y-%m-%d")
+                except Exception:
+                    pass
+            if "time" in fn_args:
+                try:
+                    fn_args["time"] = dateparser.parse(fn_args["time"]).strftime("%H:%M")
+                except Exception:
+                    pass
+
+            if fn_name == "check_availability":
+                slots = await appt_service.get_available_slots(clinic, fn_args["date"], fn_args.get("service_type"))
+                return {"available_slots": [{"time": s.time} for s in slots if s.available][:8]}
+            elif fn_name == "book_appointment":
+                return await appt_service.book_appointment(
+                    clinic=clinic, owner_name=fn_args.get("owner_name", ""), pet_name=fn_args.get("pet_name", ""),
+                    service_type=fn_args.get("service_type", "general"), target_date=fn_args["date"],
+                    target_time=fn_args["time"], owner_phone=fn_args.get("owner_phone"),
+                    pet_species=fn_args.get("pet_species"), source="chat",
+                )
+            return {"error": f"Unknown tool: {fn_name}"}
+        except Exception as e:
+            logger.error(f"Tool handler error: {e}")
+            return {"error": str(e)}
 
     result = await ai_brain.chat(clinic, user_text, history, tool_handler=handle_tool)
 
