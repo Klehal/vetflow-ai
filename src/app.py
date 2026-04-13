@@ -102,6 +102,65 @@ def create_app() -> FastAPI:
     async def health():
         return {"status": "ok", "service": "VetFlow AI"}
 
+    @app.post("/api/admin/seed-demo")
+    async def seed_demo():
+        """Seed a demo clinic for testing."""
+        import uuid, json
+        from src.models.tenant import Clinic, Staff
+
+        tenant_repo = app.state.tenant_repo
+
+        # Check if already seeded
+        existing = await tenant_repo.get_clinic_by_api_key("vf_demo_3d12ff84d2294403")
+        if existing:
+            return {"status": "already_exists", "clinic_id": existing.id, "api_key": existing.api_key}
+
+        clinic = Clinic(
+            id=str(uuid.uuid4()),
+            name="Happy Paws Veterinary Clinic",
+            phone="+15873258952",
+            email="vetflow.ai@gmail.com",
+            address="123 Pet Lane, Austin, TX 78701",
+            city="Austin",
+            state="TX",
+            timezone="America/Chicago",
+            twilio_phone="+15873258952",
+            services=["wellness_exam", "vaccination", "dental", "surgery", "sick_visit", "grooming", "boarding"],
+            business_hours={
+                "mon": {"open": "08:00", "close": "18:00"},
+                "tue": {"open": "08:00", "close": "18:00"},
+                "wed": {"open": "08:00", "close": "18:00"},
+                "thu": {"open": "08:00", "close": "18:00"},
+                "fri": {"open": "08:00", "close": "18:00"},
+                "sat": {"open": "09:00", "close": "14:00"},
+            },
+            emergency_keywords=["bleeding", "seizure", "poisoning", "hit by car", "not breathing", "unconscious"],
+            api_key="vf_demo_3d12ff84d2294403",
+            plan="standard",
+            monthly_price=599.00,
+        )
+        await tenant_repo.create_clinic(clinic)
+
+        vet = Staff(
+            id=str(uuid.uuid4()),
+            clinic_id=clinic.id,
+            name="Dr. Sarah Chen",
+            role="vet",
+            phone="+15873258952",
+            email="vetflow.ai@gmail.com",
+            is_on_call=True,
+        )
+        await tenant_repo.create_staff(vet)
+
+        return {
+            "status": "created",
+            "clinic_id": clinic.id,
+            "api_key": clinic.api_key,
+            "dashboard": f"/dashboard/?api_key={clinic.api_key}",
+            "intake_form": f"/intake/{clinic.id}",
+            "widget_config": f"/widget/{clinic.id}/config",
+        }
+
     return app
 
 
