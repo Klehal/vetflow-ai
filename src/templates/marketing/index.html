@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VetFlow AI — Stop Losing $5,000/Month in Missed Calls</title>
+    <meta name="description" content="VetFlow AI answers every missed call 24/7, books appointments automatically, and pays for itself in the first 2 clients it captures. Calgary vet clinics.">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1e293b;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* NAV */
+        nav {
+            background: #0f172a;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo { color: #fff; font-weight: 700; font-size: 1.2rem; }
+        .nav-logo span { color: #3b82f6; }
+        .nav-cta {
+            background: #3b82f6;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+            color: #fff;
+            padding: 80px 24px 60px;
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(59,130,246,0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(59,130,246,0.4);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero h1 .highlight { color: #f59e0b; }
+        .hero p {
+            font-size: 1.15rem;
+            color: #94a3b8;
+            max-width: 580px;
+            margin: 0 auto 36px;
+        }
+        .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn-primary {
+            background: #3b82f6;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        /* TRUST BAR */
+        .trust-bar {
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 24px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        /* PAIN SECTION */
+        .section { padding: 64px 24px; max-width: 1100px; margin: 0 auto; }
+        .section-title {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+        .section-sub {
+            text-align: center;
+            color: #64748b;
+            font-size: 1.05rem;
+            margin-bottom: 48px;
+        }
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .pain-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #ef4444;
+            border-radius: 10px;
+            padding: 28px;
+        }
+        .pain-icon { font-size: 2rem; margin-bottom: 12px; }
+        .pain-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: #0f172a; }
+        .pain-card p { color: #64748b; font-size: 0.95rem; }
+        /* HOW IT WORKS */
+        .how-bg { background: #f8fafc; padding: 64px 24px; }
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px; max-width: 900px; margin: 0 auto; }
+        .step { text-align: center; }
+        .step-num {
+            width: 52px; height: 52px;
+            background: #3b82f6;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+        }
+        .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+        .step p { color: #64748b; font-size: 0.9rem; }
+        /* PRICING */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 32px;
+            position: relative;
+        }
+        .pricing-card.featured {
+            border-color: #3b82f6;
+            transform: scale(1.02);
+        }
+        .badge-featured {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3b82f6;
+            color: #fff;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .plan-name { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 8px; }
+        .plan-price { font-size: 2.2rem; font-weight: 800; color: #0f172a; }
+        .plan-price span { font-size: 1rem; font-weight: 500; color: #64748b; }
+        .plan-setup { font-size: 0.9rem; color: #64748b; margin: 4px 0 16px; }
+        .plan-features { list-style: none; margin-bottom: 24px; }
+        .plan-features li { padding: 6px 0; font-size: 0.9rem; color: #475569; }
+        .plan-features li::before { content: "✓ "; color: #22c55e; font-weight: 700; }
+        .plan-cta {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 0.95rem;
+            background: #3b82f6;
+            color: #fff;
+        }
+        .plan-cta.outline {
+            background: transparent;
+            border: 2px solid #3b82f6;
+            color: #3b82f6;
+        }
+        /* PILOT NOTE */
+        .pilot-note {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 16px 24px;
+            text-align: center;
+            max-width: 600px;
+            margin: 32px auto 0;
+            font-size: 0.9rem;
+            color: #92400e;
+        }
+        .pilot-note strong { color: #78350f; }
+        /* FINAL CTA */
+        .final-cta {
+            background: linear-gradient(135deg, #0f172a, #1e3a5f);
+            color: #fff;
+            text-align: center;
+            padding: 72px 24px;
+        }
+        .final-cta h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; margin-bottom: 16px; }
+        .final-cta p { color: #94a3b8; font-size: 1.05rem; margin-bottom: 32px; }
+        /* FOOTER */
+        footer {
+            background: #0f172a;
+            color: #475569;
+            text-align: center;
+            padding: 24px;
+            font-size: 0.85rem;
+        }
+        footer a { color: #3b82f6; text-decoration: none; }
+        @media (max-width: 640px) {
+            .hero { padding: 48px 16px 40px; }
+            .pricing-card.featured { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="nav-logo">Vet<span>Flow</span> AI</div>
+    <a href="https://calendly.com/vetflowai/discovery" class="nav-cta">Book a Free Call</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-badge">Calgary Vet Clinics — Pilot Program Open</div>
+    <h1>Your Clinic Is Losing <span class="highlight">$3,000–$8,000/Month</span> in Missed Calls</h1>
+    <p>VetFlow AI answers every call 24/7, books appointments automatically, and pays for itself in the first 2 clients it captures.</p>
+    <div class="hero-ctas">
+        <a href="https://calendly.com/vetflowai/discovery" class="btn-primary">Book a Free 15-Min Call</a>
+        <a href="/dashboard?api_key=vf_demo_3d12ff84d2294403" class="btn-secondary">See Live Demo →</a>
+    </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+    🔒 30-day results guarantee &nbsp;·&nbsp; ⚡ Live in 48 hours &nbsp;·&nbsp; 🇨🇦 Built for Canadian vet clinics &nbsp;·&nbsp; 📞 No extra staff needed
+</div>
+
+<!-- PAIN SECTION -->
+<div style="padding: 64px 24px; background: #fff;">
+<div class="section" style="padding: 0;">
+    <h2 class="section-title">Every Missed Call Is Money Walking Out the Door</h2>
+    <p class="section-sub">The average vet clinic misses 25–40 calls per week. At $300–500 per appointment, that adds up fast.</p>
+    <div class="pain-grid">
+        <div class="pain-card">
+            <div class="pain-icon">📵</div>
+            <h3>Calls ring during lunch and go to voicemail</h3>
+            <p>Your team is with patients. The phone rings 8 times and a client calls your competitor instead.</p>
+        </div>
+        <div class="pain-card">
+            <div class="pain-icon">🌙</div>
+            <h3>After-hours calls = guaranteed lost revenue</h3>
+            <p>Evenings and weekends are when pet emergencies happen. Your clinic is closed. VetFlow isn't.</p>
+        </div>
+        <div class="pain-card">
+            <div class="pain-icon">⏰</div>
+            <h3>Staff spend hours on scheduling calls</h3>
+            <p>40% of front desk time goes to booking, rescheduling, and reminders. That's your most expensive way to fill slots.</p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how-bg">
+    <h2 class="section-title" style="margin-bottom: 12px;">How It Works</h2>
+    <p class="section-sub">Live in 48 hours. No technical setup on your end.</p>
+    <div class="steps">
+        <div class="step">
+            <div class="step-num">1</div>
+            <h3>We set up your AI receptionist</h3>
+            <p>We configure it with your services, hours, pricing, and FAQs. Takes 48 hours. You approve before anything goes live.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <h3>It answers every call & books appointments</h3>
+            <p>24/7 phone AI, SMS follow-ups, chat widget, and appointment reminders — all automated, all branded to your clinic.</p>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <h3>You see recovered revenue in week 1</h3>
+            <p>Most clinics capture 15–30 missed appointments in the first month. At $350/appointment, that's $5,250–$10,500.</p>
+        </div>
+    </div>
+</div>
+
+<!-- PRICING -->
+<div style="padding: 64px 24px; background: #fff;">
+<div class="section" style="padding: 0;">
+    <h2 class="section-title">Simple, Transparent Pricing</h2>
+    <p class="section-sub">Setup fee + monthly. Cancel anytime. Pays for itself in week 1.</p>
+    <div class="pricing-grid">
+
+        <div class="pricing-card">
+            <div class="plan-name">Pilot</div>
+            <div class="plan-price">$397<span>/mo</span></div>
+            <div class="plan-setup">+ $997 one-time setup</div>
+            <ul class="plan-features">
+                <li>24/7 missed call recovery</li>
+                <li>Appointment booking AI</li>
+                <li>SMS reminders</li>
+                <li>Chat widget for website</li>
+                <li>Client intake forms</li>
+                <li>Email support</li>
+            </ul>
+            <a href="https://calendly.com/vetflowai/discovery" class="plan-cta outline">Book a Call</a>
+        </div>
+
+        <div class="pricing-card featured">
+            <div class="badge-featured">Most Popular</div>
+            <div class="plan-name">Standard</div>
+            <div class="plan-price">$497<span>/mo</span></div>
+            <div class="plan-setup">+ $1,997 one-time setup</div>
+            <ul class="plan-features">
+                <li>Everything in Pilot</li>
+                <li>Phone AI (Bland.ai voice)</li>
+                <li>300 AI phone minutes/mo</li>
+                <li>1,000 SMS included</li>
+                <li>Priority onboarding (24hr)</li>
+                <li>Phone + email support</li>
+            </ul>
+            <a href="https://calendly.com/vetflowai/discovery" class="plan-cta">Get Started</a>
+        </div>
+
+        <div class="pricing-card">
+            <div class="plan-name">Premium</div>
+            <div class="plan-price">$797<span>/mo</span></div>
+            <div class="plan-setup">+ $2,997 one-time setup</div>
+            <ul class="plan-features">
+                <li>Everything in Standard</li>
+                <li>Vaccination tracking</li>
+                <li>Analytics dashboard</li>
+                <li>600 AI phone minutes/mo</li>
+                <li>2,000 SMS included</li>
+                <li>Dedicated account manager</li>
+            </ul>
+            <a href="https://calendly.com/vetflowai/discovery" class="plan-cta outline">Book a Call</a>
+        </div>
+
+    </div>
+    <div class="pilot-note">
+        <strong>🔒 Pilot Program:</strong> We're onboarding our first 3 Calgary clinics at reduced pricing to build case studies.
+        Pilot spots are <strong>$997 setup + $397/mo</strong> — locked for life as long as you stay active.
+        <strong>2 spots remaining.</strong>
+    </div>
+</div>
+</div>
+
+<!-- FINAL CTA -->
+<div class="final-cta">
+    <h2>Ready to Stop Losing Revenue to Missed Calls?</h2>
+    <p>Book a free 15-minute call. We'll show you exactly how many calls your clinic is missing and what it's costing you.</p>
+    <a href="https://calendly.com/vetflowai/discovery" class="btn-primary" style="font-size: 1.1rem; padding: 16px 36px;">
+        Book Your Free Call Now →
+    </a>
+    <p style="margin-top: 16px; font-size: 0.85rem; color: #475569;">No pressure. No sales pitch. Just data on your missed revenue.</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p>VetFlow AI &nbsp;·&nbsp; Calgary, Alberta &nbsp;·&nbsp;
+    <a href="https://calendly.com/vetflowai/discovery">Book a Call</a> &nbsp;·&nbsp;
+    <a href="/dashboard?api_key=vf_demo_3d12ff84d2294403">Live Demo</a> &nbsp;·&nbsp;
+    <a href="mailto:vetflow.ai@gmail.com">vetflow.ai@gmail.com</a>
+    </p>
+</footer>
+
+</body>
+</html>

@@ -46,17 +46,21 @@ logging:
 
 pricing:
   plans:
-    basic:
-      monthly: 499
-      features: ["chat_widget", "sms", "reminders", "intake_forms"]
+    pilot:
+      setup_fee: 997
+      monthly: 397
+      features: ["chat_widget", "sms", "reminders", "intake_forms", "missed_call_recovery"]
       included_sms: 500
+      note: "First 3 clients only — limited pilot pricing"
     standard:
-      monthly: 599
-      features: ["chat_widget", "sms", "phone", "reminders", "intake_forms"]
+      setup_fee: 1997
+      monthly: 497
+      features: ["chat_widget", "sms", "phone", "reminders", "intake_forms", "missed_call_recovery"]
       included_sms: 1000
-      included_phone_minutes: 200
+      included_phone_minutes: 300
     premium:
-      monthly: 699
-      features: ["chat_widget", "sms", "phone", "reminders", "intake_forms", "vaccination_tracking"]
+      setup_fee: 2997
+      monthly: 797
+      features: ["chat_widget", "sms", "phone", "reminders", "intake_forms", "missed_call_recovery", "vaccination_tracking", "analytics_dashboard"]
       included_sms: 2000
-      included_phone_minutes: 500
+      included_phone_minutes: 600

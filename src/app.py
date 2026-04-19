@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 from src.config import load_config
 from src.utils.logger import setup_logging
@@ -98,9 +99,29 @@ def create_app() -> FastAPI:
     app.include_router(dashboard_router)
     app.include_router(widget_router)
 
+    @app.get("/", response_class=HTMLResponse)
+    async def marketing_home():
+        """Serve the marketing landing page."""
+        from pathlib import Path
+        html_path = Path("src/templates/marketing/index.html")
+        return HTMLResponse(html_path.read_text())
+
     @app.get("/api/health")
     async def health():
         return {"status": "ok", "service": "VetFlow AI"}
+
+    @app.post("/api/admin/contact")
+    async def contact_form(request: Request):
+        """Handle marketing contact form submissions."""
+        from fastapi.responses import JSONResponse
+        try:
+            data = await request.json()
+            logger.info(f"Contact form submission: {data.get('email')} — {data.get('clinic_name')}")
+            # TODO: Store in DB and/or send notification email
+            return JSONResponse({"status": "ok", "message": "Thank you! We will be in touch shortly."})
+        except Exception as e:
+            logger.error(f"Contact form error: {e}")
+            return JSONResponse({"status": "error", "message": str(e)}, status_code=400)
 
     @app.post("/api/admin/seed-demo")
     async def seed_demo():
