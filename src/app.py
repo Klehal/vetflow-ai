@@ -110,14 +110,76 @@ def create_app() -> FastAPI:
     async def health():
         return {"status": "ok", "service": "VetFlow AI"}
 
+    @app.get("/demo/{slug}", response_class=HTMLResponse)
+    async def demo_page(slug: str):
+        """Serve a clinic-specific proof/demo page."""
+        from fastapi import Request as Req
+        import aiosqlite
+        db_path = config["_env"]["database_path"]
+        try:
+            async with aiosqlite.connect(db_path) as adb:
+                row = await (await adb.execute(
+                    "SELECT html, clinic_name FROM demo_pages WHERE slug=?", (slug,)
+                )).fetchone()
+                if row:
+                    # Count view
+                    await adb.execute(
+                        "UPDATE demo_pages SET views = views + 1 WHERE slug=?", (slug,)
+                    )
+                    await adb.commit()
+                    return HTMLResponse(row[0])
+        except Exception as e:
+            logger.warning("Demo page DB error: %s", e)
+        return HTMLResponse(
+            "<html><body><h2>Page not found</h2>"
+            "<p>This demo link may have expired. "
+            "<a href='https://calendly.com/vetflow-ai/15-min-discovery-call'>Book a call instead →</a></p>"
+            "</body></html>",
+            status_code=404,
+        )
+
+    @app.post("/api/admin/demo")
+    async def create_demo_page(request):
+        """Store a clinic demo page uploaded by proof_agent.py."""
+        from fastapi.responses import JSONResponse
+        import aiosqlite
+        try:
+            data     = await request.json()
+            slug     = data.get("slug", "")
+            name     = data.get("clinic_name", "")
+            html     = data.get("html", "")
+            if not slug or not html:
+                return JSONResponse({"error": "slug and html required"}, status_code=400)
+            db_path = config["_env"]["database_path"]
+            async with aiosqlite.connect(db_path) as adb:
+                await adb.execute(
+                    """CREATE TABLE IF NOT EXISTS demo_pages
+                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        slug TEXT UNIQUE NOT NULL,
+                        clinic_name TEXT,
+                        html TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        views INTEGER DEFAULT 0)"""
+                )
+                await adb.execute(
+                    """INSERT INTO demo_pages (slug, clinic_name, html)
+                       VALUES (?,?,?)
+                       ON CONFLICT(slug) DO UPDATE SET html=excluded.html, clinic_name=excluded.clinic_name""",
+                    (slug, name, html),
+                )
+                await adb.commit()
+            return JSONResponse({"status": "ok", "url": f"/demo/{slug}"})
+        except Exception as e:
+            logger.error("Demo page create error: %s", e)
+            return JSONResponse({"error": str(e)}, status_code=500)
+
     @app.post("/api/admin/contact")
-    async def contact_form(request: Request):
+    async def contact_form(request):
         """Handle marketing contact form submissions."""
         from fastapi.responses import JSONResponse
         try:
             data = await request.json()
             logger.info(f"Contact form submission: {data.get('email')} — {data.get('clinic_name')}")
-            # TODO: Store in DB and/or send notification email
             return JSONResponse({"status": "ok", "message": "Thank you! We will be in touch shortly."})
         except Exception as e:
             logger.error(f"Contact form error: {e}")
