@@ -110,14 +110,78 @@ def create_app() -> FastAPI:
     async def health():
         return {"status": "ok", "service": "VetFlow AI"}
 
+    @app.get("/demo/{slug}", response_class=HTMLResponse)
+    async def demo_page(slug: str):
+        """Serve a clinic-specific proof/demo page."""
+        import aiosqlite
+        db_path = config["_env"]["database_path"]
+        try:
+            async with aiosqlite.connect(db_path) as adb:
+                row = await (await adb.execute(
+                    "SELECT html FROM demo_pages WHERE slug=?", (slug,)
+                )).fetchone()
+                if row:
+                    await adb.execute(
+                        "UPDATE demo_pages SET views = views + 1 WHERE slug=?", (slug,)
+                    )
+                    await adb.commit()
+                    return HTMLResponse(row[0])
+        except Exception as e:
+            logger.warning("Demo page DB error: %s", e)
+        return HTMLResponse(
+            "<html><body style='font-family:sans-serif;max-width:500px;margin:60px auto;padding:20px'>"
+            "<h2>Page not found</h2>"
+            "<p>This demo link may have expired.</p>"
+            "<a href='https://calendly.com/vetflow-ai/15-min-discovery-call' "
+            "style='background:#6366f1;color:#fff;padding:12px 20px;border-radius:6px;"
+            "text-decoration:none;display:inline-block;margin-top:16px'>"
+            "Book a call with Karan →</a></body></html>",
+            status_code=404,
+        )
+
+    @app.post("/api/admin/demo")
+    async def create_demo_page(request):
+        """Store a clinic-specific proof page (uploaded by proof_agent.py)."""
+        from fastapi.responses import JSONResponse
+        import aiosqlite
+        try:
+            data = await request.json()
+            slug = data.get("slug", "")
+            name = data.get("clinic_name", "")
+            html = data.get("html", "")
+            if not slug or not html:
+                return JSONResponse({"error": "slug and html required"}, status_code=400)
+            db_path = config["_env"]["database_path"]
+            async with aiosqlite.connect(db_path) as adb:
+                await adb.execute(
+                    """CREATE TABLE IF NOT EXISTS demo_pages (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        slug TEXT UNIQUE NOT NULL,
+                        clinic_name TEXT,
+                        html TEXT NOT NULL,
+                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                        views INTEGER DEFAULT 0
+                    )"""
+                )
+                await adb.execute(
+                    """INSERT INTO demo_pages (slug, clinic_name, html) VALUES (?,?,?)
+                       ON CONFLICT(slug) DO UPDATE SET
+                         html=excluded.html, clinic_name=excluded.clinic_name""",
+                    (slug, name, html),
+                )
+                await adb.commit()
+            return JSONResponse({"status": "ok", "url": f"/demo/{slug}"})
+        except Exception as e:
+            logger.error("Demo page create error: %s", e)
+            return JSONResponse({"error": str(e)}, status_code=500)
+
     @app.post("/api/admin/contact")
-    async def contact_form(request: Request):
+    async def contact_form(request):
         """Handle marketing contact form submissions."""
         from fastapi.responses import JSONResponse
         try:
             data = await request.json()
             logger.info(f"Contact form submission: {data.get('email')} — {data.get('clinic_name')}")
-            # TODO: Store in DB and/or send notification email
             return JSONResponse({"status": "ok", "message": "Thank you! We will be in touch shortly."})
         except Exception as e:
             logger.error(f"Contact form error: {e}")
@@ -126,12 +190,11 @@ def create_app() -> FastAPI:
     @app.post("/api/admin/seed-demo")
     async def seed_demo():
         """Seed a demo clinic for testing."""
-        import uuid, json
+        import uuid
         from src.models.tenant import Clinic, Staff
 
         tenant_repo = app.state.tenant_repo
 
-        # Check if already seeded
         existing = await tenant_repo.get_clinic_by_api_key("vf_demo_3d12ff84d2294403")
         if existing:
             return {"status": "already_exists", "clinic_id": existing.id, "api_key": existing.api_key}
@@ -141,12 +204,12 @@ def create_app() -> FastAPI:
             name="Happy Paws Veterinary Clinic",
             phone="+15873258952",
             email="vetflow.ai@gmail.com",
-            address="123 Pet Lane, Austin, TX 78701",
-            city="Austin",
-            state="TX",
-            timezone="America/Chicago",
+            address="123 Pet Lane, Calgary, AB T2P 1J9",
+            city="Calgary",
+            state="AB",
+            timezone="America/Edmonton",
             twilio_phone="+15873258952",
-            services=["wellness_exam", "vaccination", "dental", "surgery", "sick_visit", "grooming", "boarding"],
+            services=["wellness_exam", "vaccination", "dental", "surgery", "sick_visit"],
             business_hours={
                 "mon": {"open": "08:00", "close": "18:00"},
                 "tue": {"open": "08:00", "close": "18:00"},
@@ -155,10 +218,10 @@ def create_app() -> FastAPI:
                 "fri": {"open": "08:00", "close": "18:00"},
                 "sat": {"open": "09:00", "close": "14:00"},
             },
-            emergency_keywords=["bleeding", "seizure", "poisoning", "hit by car", "not breathing", "unconscious"],
+            emergency_keywords=["bleeding", "seizure", "poisoning", "hit by car", "not breathing"],
             api_key="vf_demo_3d12ff84d2294403",
             plan="standard",
-            monthly_price=599.00,
+            monthly_price=499.00,
         )
         await tenant_repo.create_clinic(clinic)
 
@@ -178,8 +241,6 @@ def create_app() -> FastAPI:
             "clinic_id": clinic.id,
             "api_key": clinic.api_key,
             "dashboard": f"/dashboard/?api_key={clinic.api_key}",
-            "intake_form": f"/intake/{clinic.id}",
-            "widget_config": f"/widget/{clinic.id}/config",
         }
 
     return app
