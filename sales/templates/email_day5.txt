@@ -1,0 +1,12 @@
+SUBJECT: Last one — {{clinic_name}}
+
+Hi {{owner_name_or_team}},
+
+I'll keep this short — I know things get busy.
+
+I built a simple system that automatically texts back missed callers and captures the booking. I put together a 60-second example for {{clinic_name}} that shows exactly what it would look like.
+
+If it's something you want to see, just reply and I'll send it. If not, no worries at all — I won't follow up again.
+
+— Karan
+VetFlow AI, Calgary

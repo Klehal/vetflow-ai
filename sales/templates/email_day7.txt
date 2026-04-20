@@ -1,0 +1,9 @@
+SUBJECT: Closing this out — {{clinic_name}}
+
+Hi {{owner_name_or_team}},
+
+Going to stop following up after this one — don't want to clog your inbox.
+
+If the timing's ever right, I'm at vetflow.ai@gmail.com.
+
+— Karan

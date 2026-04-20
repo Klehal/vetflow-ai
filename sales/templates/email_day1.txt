@@ -1,0 +1,16 @@
+SUBJECT: Quick question about missed calls at {{clinic_name}}
+
+Hey {{owner_name_or_team}},
+
+Tried calling earlier — got me thinking about something.
+
+When things get busy or it's after hours at {{clinic_name}}, what actually happens to the calls that don't get picked up? Does that person get a text back, or does it usually just go to voicemail?
+
+I've been building a simple system for vet clinics here in Calgary that automatically follows up with missed callers and helps turn them into booked appointments. No extra staff, works 24/7.
+
+Happy to put together a quick example showing exactly how it would work for {{clinic_name}} — takes about 60 seconds to look at.
+
+Want me to send it over? Just reply "yes" and I'll put it together for you.
+
+— Karan
+VetFlow AI, Calgary
