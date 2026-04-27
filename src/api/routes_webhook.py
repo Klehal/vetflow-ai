@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 import uuid
 from fastapi import APIRouter, Request, Form
 from fastapi.responses import JSONResponse, Response
@@ -10,6 +11,53 @@ from src.models.conversation import Conversation, Message, Channel
 
 logger = logging.getLogger("vetflow.webhooks")
 router = APIRouter()
+
+
+@router.post("/webhooks/twilio/voice")
+async def twilio_incoming_call(request: Request):
+    """Handle incoming calls to the Twilio demo number.
+
+    Plays a brief demo message, then fires an SMS to the caller
+    showing exactly what a vet clinic's missed-call recovery looks like.
+    """
+    form = await request.form()
+    caller = form.get("From", "")
+    called = form.get("To", "")
+
+    logger.info(f"Incoming demo call from {caller} to {called}")
+
+    # Fire the demo SMS immediately so it arrives while they're still on the line
+    if caller:
+        try:
+            from twilio.rest import Client as TwilioClient
+            tw = TwilioClient(
+                os.environ.get("TWILIO_ACCOUNT_SID"),
+                os.environ.get("TWILIO_AUTH_TOKEN"),
+            )
+            sms_body = (
+                "Hi! This is Alpine Veterinary Clinic — sorry we missed your call. "
+                "Are you looking to book an appointment for your pet? "
+                "Reply here and we'll get you taken care of right away. \U0001f43e\n\n"
+                "— Powered by VetFlow AI (this is a live demo)"
+            )
+            tw.messages.create(to=caller, from_=called, body=sms_body)
+            logger.info(f"Demo SMS sent to {caller}")
+        except Exception as e:
+            logger.warning(f"Demo SMS failed: {e}")
+
+    # Return TwiML: brief voice message then hang up
+    twiml = """<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="Polly.Joanna">
+    Thanks for calling. You've reached the VetFlow A.I. demo line.
+    We didn't answer your call on purpose.
+    Check your phone — you should have just received a text message.
+    That is exactly what every missed caller at a VetFlow clinic receives within 60 seconds.
+    The system just worked live.
+  </Say>
+  <Pause length="1"/>
+</Response>"""
+    return Response(content=twiml, media_type="application/xml")
 
 
 @router.post("/webhooks/bland/call-event")
