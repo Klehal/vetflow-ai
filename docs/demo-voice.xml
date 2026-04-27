@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="Polly.Joanna">Thanks for calling. You have reached the VetFlow A.I. demonstration line. We missed your call on purpose. Watch your phone for a text message in the next 60 seconds. That text is exactly what Alpine Veterinary Clinic's patients would receive every time a call goes unanswered. Stand by.</Say>
+  <Pause length="2"/>
+</Response>

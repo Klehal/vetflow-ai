@@ -1,0 +1,12 @@
+SUBJECT: Re: missed calls at {{clinic_name}}
+
+Hi {{owner_name_or_team}},
+
+Following up on my email earlier this week.
+
+I put together a quick example showing how the missed-call recovery flow would work specifically for {{clinic_name}} — takes about 60 seconds to look at.
+
+Want me to send it over?
+
+— Karan
+VetFlow AI, Calgary

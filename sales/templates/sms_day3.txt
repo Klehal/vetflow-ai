@@ -1,0 +1,1 @@
+Built a simple system for Calgary vet clinics that captures missed calls and turns them into booked appointments automatically. Happy to show you how it'd work for {{clinic_name}}: {{calendly_link}}
