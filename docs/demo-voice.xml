@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Sms>Hi! This is Alpine Veterinary Clinic - sorry we missed your call. Are you looking to book an appointment for your pet? Reply here and we will get you taken care of right away. - VetFlow AI</Sms>
+  <Sms>Hi! This is Alpine Veterinary Clinic - sorry we missed your call. Are you looking to book an appointment for your pet? Reply here and we will get you taken care of right away. - VetRevenue AI</Sms>
   <Say voice="Polly.Joanna">Thanks for calling. Watch your phone — you just received a text message. That is exactly what every missed caller at Alpine Veterinary Clinic would get within 60 seconds. The system just worked live.</Say>
   <Pause length="1"/>
 </Response>
