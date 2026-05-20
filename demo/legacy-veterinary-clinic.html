@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Legacy Veterinary Clinic | Missed Call Recovery Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #16202a;
+      --muted: #5f6f7b;
+      --line: #d8e3e8;
+      --paper: #fbfdfc;
+      --soft: #eef6f3;
+      --brand: #0f6b5f;
+      --brand-dark: #09483f;
+      --accent: #d76f32;
+      --accent-soft: #fff1e8;
+      --white: #ffffff;
+      --shadow: 0 18px 48px rgba(12, 54, 48, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      overflow: hidden;
+    }
+
+    .section {
+      padding: 48px 20px;
+    }
+
+    .wrap {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--brand);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: anywhere;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(2.35rem, 8vw, 4.8rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: clamp(1.8rem, 5vw, 3.1rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(115deg, rgba(9, 72, 63, 0.96), rgba(15, 107, 95, 0.82)),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='900' viewBox='0 0 1400 900'%3E%3Crect width='1400' height='900' fill='%23dbeee8'/%3E%3Cpath d='M0 690C180 610 300 635 475 565c170-68 260-205 470-180 180 22 255 142 455 80v435H0z' fill='%23b9d8d1'/%3E%3Cpath d='M750 190h390c45 0 82 37 82 82v255c0 45-37 82-82 82H750c-45 0-82-37-82-82V272c0-45 37-82 82-82z' fill='%23f7fbf9'/%3E%3Cpath d='M804 278h290M804 348h222M804 418h260' stroke='%2394b9b0' stroke-width='24' stroke-linecap='round'/%3E%3Ccircle cx='395' cy='415' r='118' fill='%23ffffff'/%3E%3Cpath d='M338 402c28-72 92-72 120 0 22 57-10 105-60 105s-82-48-60-105z' fill='%230f6b5f'/%3E%3Ccircle cx='355' cy='332' r='28' fill='%230f6b5f'/%3E%3Ccircle cx='441' cy='332' r='28' fill='%230f6b5f'/%3E%3Ccircle cx='304' cy='392' r='24' fill='%230f6b5f'/%3E%3Ccircle cx='492' cy='392' r='24' fill='%230f6b5f'/%3E%3C/svg%3E");
+      background-position: center;
+      background-size: cover;
+      color: var(--white);
+      padding: 28px 20px 68px;
+    }
+
+    .hero::after {
+      position: absolute;
+      right: 20px;
+      bottom: 18px;
+      left: 20px;
+      height: 1px;
+      content: "";
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .nav {
+      position: absolute;
+      top: 22px;
+      right: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+
+    .mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--accent);
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .hero-meta {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 0.9rem;
+      text-align: right;
+    }
+
+    .hero-copy {
+      width: min(1120px, 100%);
+      margin: 88px auto 0;
+    }
+
+    .hero .eyebrow {
+      color: #b8fff0;
+    }
+
+    .hero-text {
+      max-width: 700px;
+      margin-top: 18px;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: clamp(1.08rem, 3vw, 1.35rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 13px 18px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: var(--white);
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 12px 26px rgba(102, 49, 20, 0.22);
+    }
+
+    .button.secondary {
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: none;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 42px;
+    }
+
+    .stat {
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.45rem;
+      line-height: 1.1;
+    }
+
+    .stat span {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.92rem;
+    }
+
+    .pain {
+      background: var(--white);
+    }
+
+    .pain-grid,
+    .calc-grid,
+    .guarantee-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .callout {
+      padding: 24px;
+      border-left: 6px solid var(--accent);
+      border-radius: 8px;
+      background: var(--accent-soft);
+      box-shadow: var(--shadow);
+      font-size: clamp(1.2rem, 4vw, 1.75rem);
+      font-weight: 800;
+      line-height: 1.18;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .calculator {
+      background: var(--soft);
+    }
+
+    .panel {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .inputs {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .result {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .result-number {
+      color: var(--brand-dark);
+      font-size: clamp(2rem, 8vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .formula {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .steps {
+      background: var(--white);
+    }
+
+    .step-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .step {
+      position: relative;
+      min-height: 172px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+
+    .step-number {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      margin-bottom: 18px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--brand);
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .guarantee {
+      background: var(--brand-dark);
+      color: var(--white);
+    }
+
+    .guarantee .eyebrow {
+      color: #b8fff0;
+    }
+
+    .price-card {
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .price {
+      display: block;
+      margin-bottom: 8px;
+      font-size: clamp(2.2rem, 10vw, 4rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .footer {
+      padding: 24px 20px;
+      background: #111a20;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    @media (min-width: 680px) {
+      .section {
+        padding: 70px 28px;
+      }
+
+      .hero {
+        padding-right: 28px;
+        padding-left: 28px;
+      }
+
+      .nav {
+        right: 28px;
+        left: 28px;
+        width: min(1120px, calc(100% - 56px));
+      }
+
+      .stats,
+      .step-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .inputs {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 860px) {
+      .pain-grid,
+      .calc-grid,
+      .guarantee-grid {
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 46px;
+      }
+
+      .guarantee-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .nav {
+        align-items: flex-start;
+      }
+
+      .hero-meta {
+        max-width: 145px;
+        font-size: 0.78rem;
+      }
+
+      .hero-actions .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="nav" aria-label="Page header">
+        <div class="brand"><span class="mark">V</span> VetRevenue AI</div>
+        <div class="hero-meta">Built for SE Calgary clinics</div>
+      </div>
+
+      <div class="hero-copy">
+        <p class="eyebrow">Missed call recovery demo</p>
+        <h1>Legacy Veterinary Clinic</h1>
+        <p class="hero-text">
+          A practical AI answering system for Dr. Maryam Jajouei's team that captures
+          after-hours callers before they choose another clinic.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="https://calendly.com/vetflow-ai">Book a 10-Minute Demo</a>
+          <a class="button secondary" href="#calculator">See recovered revenue</a>
+        </div>
+        <div class="stats" aria-label="Clinic context">
+          <div class="stat">
+            <strong>4.8&#9733;</strong>
+            <span>Google rating from 943 reviews</span>
+          </div>
+          <div class="stat">
+            <strong>8pm</strong>
+            <span>Weekday close, then voicemail</span>
+          </div>
+          <div class="stat">
+            <strong>SE Calgary</strong>
+            <span>Mahogany and Legacy neighborhoods</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section pain">
+      <div class="wrap pain-grid">
+        <div>
+          <p class="eyebrow">The revenue leak</p>
+          <h2>Voicemail does not book appointments.</h2>
+          <p class="muted">
+            A busy clinic can have strong reviews, loyal clients, and still lose new patient
+            demand when calls arrive after the front desk is closed.
+          </p>
+        </div>
+        <div class="callout">
+          Every call after 8pm weekdays, 2pm Saturday goes to voicemail. Most of those
+          callers never call back.
+        </div>
+      </div>
+    </section>
+
+    <section id="calculator" class="section calculator">
+      <div class="wrap calc-grid">
+        <div>
+          <p class="eyebrow">ROI calculator</p>
+          <h2>Missed calls become booked visits.</h2>
+          <p class="muted">
+            Using conservative inputs for Legacy Veterinary Clinic: 15 missed calls per week,
+            a 40% recovery rate, and a $150 average appointment value.
+          </p>
+        </div>
+        <div class="panel">
+          <h3>Monthly recovered revenue estimate</h3>
+          <div class="inputs">
+            <label>
+              Missed calls/week
+              <input id="calls" type="number" min="0" step="1" value="15">
+            </label>
+            <label>
+              Recovery rate
+              <input id="rate" type="number" min="0" max="100" step="1" value="40">
+            </label>
+            <label>
+              Avg appointment
+              <input id="value" type="number" min="0" step="10" value="150">
+            </label>
+          </div>
+          <div class="result" aria-live="polite">
+            <div id="monthly" class="result-number">$3,897/mo</div>
+            <p id="formula" class="formula">
+              15 calls/week x 40% recovered x $150 x 4.33 weeks = $3,897/month
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section steps">
+      <div class="wrap">
+        <p class="eyebrow">How it works</p>
+        <h2>Three steps from missed call to booking.</h2>
+        <div class="step-grid">
+          <article class="step">
+            <div class="step-number">1</div>
+            <h3>Missed call</h3>
+            <p class="muted">
+              A pet owner calls after-hours, during a rush, or when the team cannot pick up.
+            </p>
+          </article>
+          <article class="step">
+            <div class="step-number">2</div>
+            <h3>AI answers</h3>
+            <p class="muted">
+              VetRevenue AI responds immediately, discloses it is AI, captures the request,
+              and routes emergencies away from automation.
+            </p>
+          </article>
+          <article class="step">
+            <div class="step-number">3</div>
+            <h3>SMS booking link in 60s</h3>
+            <p class="muted">
+              The caller receives a booking link and clear next step while the clinic gets
+              the lead details for follow-up.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section guarantee">
+      <div class="wrap guarantee-grid">
+        <div>
+          <p class="eyebrow">Pilot offer</p>
+          <h2>Recover appointments first. Keep it only if it works.</h2>
+          <p>
+            The pilot installs missed-call capture, AI response, SMS follow-up, and booking
+            handoff for Legacy Veterinary Clinic.
+          </p>
+        </div>
+        <div class="price-card">
+          <span class="price">$1,497</span>
+          <h3>30-day pilot</h3>
+          <p>
+            Money back if zero appointments are recovered in the first 30 days.
+          </p>
+          <div class="hero-actions">
+            <a class="button" href="https://calendly.com/vetflow-ai">Book a 10-Minute Demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    VetRevenue AI | Calgary, AB | 403-852-5546 | vetflow.ai@gmail.com
+  </footer>
+
+  <script>
+    const calls = document.getElementById("calls");
+    const rate = document.getElementById("rate");
+    const value = document.getElementById("value");
+    const monthly = document.getElementById("monthly");
+    const formula = document.getElementById("formula");
+    const weeksPerMonth = 4.33;
+
+    function money(amount) {
+      return new Intl.NumberFormat("en-CA", {
+        style: "currency",
+        currency: "CAD",
+        maximumFractionDigits: 0
+      }).format(amount);
+    }
+
+    function updateCalculator() {
+      const callCount = Number(calls.value) || 0;
+      const recoveryRate = Number(rate.value) || 0;
+      const appointmentValue = Number(value.value) || 0;
+      const recovered = callCount * (recoveryRate / 100) * appointmentValue * weeksPerMonth;
+
+      monthly.textContent = money(recovered) + "/mo";
+      formula.textContent =
+        callCount + " calls/week x " +
+        recoveryRate + "% recovered x " +
+        money(appointmentValue) + " x 4.33 weeks = " +
+        money(recovered) + "/month";
+    }
+
+    calls.addEventListener("input", updateCalculator);
+    rate.addEventListener("input", updateCalculator);
+    value.addEventListener("input", updateCalculator);
+    updateCalculator();
+  </script>
+</body>
+</html>
